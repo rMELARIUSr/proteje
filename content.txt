@@ -8,7 +8,7 @@ import pyperclip
 import time
 import webbrowser
 
-# Variables globales
+# Variables globales nuevas ji
 nombre_archivo = None
 extension_archivo = None
 contenido_bytes = None
