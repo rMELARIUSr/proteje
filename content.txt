@@ -498,6 +498,8 @@ def CompruebaVersion():
                 contenido2 = resp2.text
                 with open("cryptoGrafo.py", "w", encoding="utf-8") as f:
                     f.write(contenido2)
+        with open("hetx.prtt", "w") as f:
+            f.write(contenido)
     else:
         print("Error al acceder al archivo:", resp.status_code)
     CompruebaKey()
@@ -507,7 +509,7 @@ def orden(texto):#Lo devuelve
     with open("vlauni.prtt", "r") as f:
         obtieneSemilla = f.read()
     random.seed(obtieneSemilla)
-    frase = list("0123456789abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ-/")
+    frase = list("0123456789abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ-/_")
     desfrase = frase.copy()
     random.shuffle(desfrase)
 
@@ -524,7 +526,7 @@ def desorden(texto):#Lo trangiversa
     with open("vlauni.prtt", "r") as f:
         obtieneSemilla = f.read()
     random.seed(obtieneSemilla)
-    frase = list("0123456789abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ-/")
+    frase = list("0123456789abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ-/_")
     desfrase = frase.copy()
     random.shuffle(desfrase)
 
@@ -540,7 +542,7 @@ def desorden(texto):#Lo trangiversa
 def desalocar(palabra):
     semilla = "sa21fs5d87d54gd524j5k4j24j2h14554fd45hy4m54jyhkj8u7k58jju52f4df14df5ds85ds45r56153y1jjm4ju984m56j1mu35lkuio54li561"
     random.seed(semilla)
-    frase = list("0123456789abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ-/")
+    frase = list("0123456789abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ-/_")
     desfrase = frase.copy()
     random.shuffle(desfrase)
 
@@ -579,7 +581,7 @@ def CompruebaKey():
 
         output = subprocess.check_output("wmic csproduct get uuid", shell=True).decode()
         lineas = [line.strip() for line in output.splitlines() if line.strip()]
-        uuid = lineas[1]
+        uuid1 = lineas[1]
 
         output2 = subprocess.check_output("wmic os get SerialNumber", shell=True).decode()
         lineas2 = [line2.strip() for line2 in output2.splitlines() if line2.strip()]
@@ -587,13 +589,13 @@ def CompruebaKey():
 
         if(parteMac == mac):
             enRegla += 1
-        if(parteUUID == uuid):
+        if(parteUUID == uuid1):
             enRegla += 1
         if(parteProduct == product_id):
             enRegla += 1
         
         separaValor = parteLicencia.split("-")
-        procede = checaHora(separaValor,"0")
+        procede = checaHora(separaValor,"1")
         if(procede >= 1):
             enRegla += 1
         if(enRegla >= 3):
@@ -609,6 +611,7 @@ def checaHora(separaValor, web = "0"):
     hora_pc = datetime.now(timezone.utc)
     print("Hora UTC del PC:", hora_pc)
 
+    print(f"separaV: {separaValor}")
     fechaInicio = separaValor[0]
     fechaLimite = separaValor[1]
     hastaCuando = separaValor[2]
@@ -678,7 +681,7 @@ def ValidaKey():
     # ====================
 
 
-    procede = checaHora(separaValor,"0")
+    procede = checaHora(separaValor,"1")
 
     if(procede >= 1):
         mac = uuid.getnode()
@@ -686,12 +689,12 @@ def ValidaKey():
 
         output = subprocess.check_output("wmic csproduct get uuid", shell=True).decode()
         lineas = [line.strip() for line in output.splitlines() if line.strip()]
-        uuid = lineas[1]
+        uuid1 = lineas[1]
 
         product_id = subprocess.check_output("wmic os get SerialNumber", shell=True)
         product_id = product_id.decode().strip()
 
-        fraseFinal = value + "_" + mac + "_" + uuid + "_" + product_id
+        fraseFinal = value + "_" + mac + "_" + uuid1 + "_" + product_id
         random.seed(fraseFinal)
         longitud = random.randint(20, 100)
         palabrasLlaves = "0123456789abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ"
