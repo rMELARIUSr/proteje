@@ -7,8 +7,13 @@ import array
 import pyperclip
 import time
 import webbrowser
-
-# Variables globales nuevas ji
+import subprocess
+import uuid
+import requests
+from dateutil.relativedelta import relativedelta
+from datetime import datetime, timezone, timedelta
+#La version ha sido instalada, lo hemos logrado caballeros
+# Variables globales
 nombre_archivo = None
 extension_archivo = None
 contenido_bytes = None
@@ -475,12 +480,287 @@ def copiartwit():
 def copiaryt():
     webbrowser.open("https://youtube.com/@melarius-app?si=5Zlh4Ug1O98gdHvu")
 
+#==========================================================================================================================
+#==========================================================================================================================
+#==========================================================================================================================
+def CompruebaVersion():
+    with open("hetx.prtt", "r") as f:
+        version = f.read()
+    url = "https://raw.githubusercontent.com/rMELARIUSr/proteje/main/version.txt"
+    resp = requests.get(url)
+    if resp.status_code == 200:
+        contenido = resp.text
+        print(f"Contenido del archivo:{contenido}, version: {version}")
+        if(contenido != version):
+            url2 = "https://raw.githubusercontent.com/rMELARIUSr/proteje/main/content.txt"
+            resp2 = requests.get(url2)
+            if resp2.status_code == 200:
+                contenido2 = resp2.text
+                with open("cryptoGrafo.py", "w", encoding="utf-8") as f:
+                    f.write(contenido2)
+    else:
+        print("Error al acceder al archivo:", resp.status_code)
+    CompruebaKey()
+
+def orden(texto):#Lo devuelve
+    obtieneSemilla = ""
+    with open("vlauni.prtt", "r") as f:
+        obtieneSemilla = f.read()
+    random.seed(obtieneSemilla)
+    frase = list("0123456789abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ-/")
+    desfrase = frase.copy()
+    random.shuffle(desfrase)
+
+    palabra = list(texto)
+    termina = ""
+    for i in palabra:
+        g = desfrase.index(i)
+        nuevaLetra = frase[g]
+        termina = termina + nuevaLetra
+    return termina
+    
+def desorden(texto):#Lo trangiversa
+    obtieneSemilla = ""
+    with open("vlauni.prtt", "r") as f:
+        obtieneSemilla = f.read()
+    random.seed(obtieneSemilla)
+    frase = list("0123456789abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ-/")
+    desfrase = frase.copy()
+    random.shuffle(desfrase)
+
+    palabra = list(texto)
+    termina = ""
+    for i in palabra:
+        g = frase.index(i)
+        nuevaLetra = desfrase[g]
+        termina = termina + nuevaLetra
+    return termina
+    
+
+def desalocar(palabra):
+    semilla = "sa21fs5d87d54gd524j5k4j24j2h14554fd45hy4m54jyhkj8u7k58jju52f4df14df5ds85ds45r56153y1jjm4ju984m56j1mu35lkuio54li561"
+    random.seed(semilla)
+    frase = list("0123456789abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ-/")
+    desfrase = frase.copy()
+    random.shuffle(desfrase)
+
+    palabra = list(palabra)
+    termina = ""
+    for i in palabra:
+        g = desfrase.index(i)
+        nuevaLetra = frase[g]
+        termina = termina + nuevaLetra
+    print(f"llave de licencia: {termina}")
+    return termina
+
+
+
+def CompruebaKey():
+    #Si no hay key, entonces se abre la interfaz grafica
+    #Si hay key, entonces comprueba que lo que tiene la key concuerda con los datos del sistema, si no concuerda, borra la key que tiene y muestra la interfaz
+    linea = ""
+    archiv = "xqtsbc.prtt"
+    if(os.path.exists(archiv) and os.path.getsize(archiv) != 0):
+        with open("xqtsbc.prtt", "r", encoding="utf-8") as f:
+            linea = f.readline().strip()
+        for i in range(3):
+            linea = orden(linea)
+        
+        enRegla = 0
+
+        separaLinea = linea.split("_")
+        parteLicencia = separaLinea[0]
+        parteMac = separaLinea[1]
+        parteUUID = separaLinea[2]
+        parteProduct = separaLinea[3]
+
+        mac = uuid.getnode()#bien
+        mac = hex(mac)
+
+        output = subprocess.check_output("wmic csproduct get uuid", shell=True).decode()
+        lineas = [line.strip() for line in output.splitlines() if line.strip()]
+        uuid = lineas[1]
+
+        output2 = subprocess.check_output("wmic os get SerialNumber", shell=True).decode()
+        lineas2 = [line2.strip() for line2 in output2.splitlines() if line2.strip()]
+        product_id = lineas2[1]
+
+        if(parteMac == mac):
+            enRegla += 1
+        if(parteUUID == uuid):
+            enRegla += 1
+        if(parteProduct == product_id):
+            enRegla += 1
+        
+        separaValor = parteLicencia.split("-")
+        procede = checaHora(separaValor,"0")
+        if(procede >= 1):
+            enRegla += 1
+        if(enRegla >= 3):
+            protektor.destroy()
+            contenedorLog.grid_remove()
+            contnedorApp.grid()
+    else:
+        textoKey.grid()
+        botoncito.grid()
+
+def checaHora(separaValor, web = "0"):
+    # 1. Hora UTC del computador
+    hora_pc = datetime.now(timezone.utc)
+    print("Hora UTC del PC:", hora_pc)
+
+    fechaInicio = separaValor[0]
+    fechaLimite = separaValor[1]
+    hastaCuando = separaValor[2]
+    tipoLlave = separaValor[3]
+
+    # 2. Hora UTC de un servidor externo (WorldTimeAPI)
+    try:
+        resp = requests.get("http://worldtimeapi.org/api/timezone/Etc/UTC")
+        data = resp.json()
+        hora_servidor = datetime.fromisoformat(data["utc_datetime"].replace("Z", "+00:00"))
+        print("Hora UTC del servidor:", hora_servidor)
+    except Exception as e:
+        messagebox.showinfo("Error al validar Licencia", "Debes conectarte a internet")
+        hora_servidor = None
+
+    # 3. Comparar ambas horas con tolerancia de 30 minutos
+    if(hora_servidor == None and web == "1"):
+        hora_servidor = hora_pc
+    if hora_servidor:
+        diferencia = abs(hora_pc - hora_servidor)
+        if diferencia <= timedelta(minutes=120):
+            print("La hora del PC está dentro del rango permitido.")
+            
+            # 4. Convertir tu texto a datetime y comparar con la hora del PC
+            
+            partesIni = list(map(int, fechaInicio.split("/")))
+            anio, mes, dia, hora, minuto, segundo, microsegundo = partesIni
+            fechaIni = datetime(anio, mes, dia, hora, minuto, segundo, microsegundo, tzinfo=timezone.utc)
+
+            partesLim = list(map(int, fechaLimite.split("/")))
+            anio, mes, dia, hora, minuto, segundo, microsegundo = partesLim
+            fechaLim = datetime(anio, mes, dia, hora, minuto, segundo, microsegundo, tzinfo=timezone.utc)
+
+            partesCua = list(map(int, hastaCuando.split("/")))
+            anio, mes, dia, hora, minuto, segundo, microsegundo = partesCua
+            fechaCua = datetime(anio, mes, dia, hora, minuto, segundo, microsegundo, tzinfo=timezone.utc)
+
+            if(hora_pc > fechaIni and fechaLim > hora_pc ):
+                diff = relativedelta(fechaCua, fechaIni)
+                procede = 0
+                if diff.years == 1 and diff.months == 0 and diff.days == 0 and tipoLlave == "ULTA":
+                    procede += 1
+                elif diff.months == 1 and diff.years == 0 and diff.days == 0 and tipoLlave == "ULTM":
+                    procede += 1
+                elif diff.days == 2 and diff.months == 0 and diff.years == 0 and tipoLlave == "ULPP":
+                    archivoPrueba = "whfkr.prtt"
+                    if not os.path.exists(archivoPrueba):
+                        with open(archivoPrueba, "w", encoding="utf-8") as f:
+                            f.write("1")
+                        procede += 1
+                    else:
+                        messagebox.showinfo("Licencia", "Parece ser que ya usaste tu licencia de prueba")
+                elif diff.years == 100 and diff.months == 0 and diff.days == 0 and tipoLlave == "ULTT":
+                    procede += 1
+            else:
+                messagebox.showinfo("Hora desincronizada", "Parece ser que usaste tu licencia fuera del rango del tiempo")
+        else:
+            messagebox.showinfo("Hora desincronizada", "Configura bien tu hora \n si el problema persiste, contacta al vendedor")
+    return procede
+def ValidaKey():
+    #se ingresa key por que no hay y se comprueba que es valida
+    valor = entrada.get()
+    value = desalocar(valor)
+    separaValor = value.split("-")
+    # ====================
+    # Analizar valor y ver que todo este en orden
+    # ====================
+
+
+    procede = checaHora(separaValor,"0")
+
+    if(procede >= 1):
+        mac = uuid.getnode()
+        mac = hex(mac)
+
+        output = subprocess.check_output("wmic csproduct get uuid", shell=True).decode()
+        lineas = [line.strip() for line in output.splitlines() if line.strip()]
+        uuid = lineas[1]
+
+        product_id = subprocess.check_output("wmic os get SerialNumber", shell=True)
+        product_id = product_id.decode().strip()
+
+        fraseFinal = value + "_" + mac + "_" + uuid + "_" + product_id
+        random.seed(fraseFinal)
+        longitud = random.randint(20, 100)
+        palabrasLlaves = "0123456789abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ"
+        llaveGeneralDeUso = "".join(random.choice(palabrasLlaves) for _ in range(longitud))
+
+        archivoLlave = "vlauni.prtt"
+
+        if not os.path.exists(archivoLlave) or os.path.getsize(archivoLlave) == 0:
+            with open(archivoLlave, "w", encoding="utf-8") as f:
+                f.write(llaveGeneralDeUso)
+
+        for i in range(3):
+            fraseFinal = desorden(fraseFinal)
+        with open("xqtsbc.prtt", "w", encoding="utf-8") as q:
+            q.write(fraseFinal)
+        CompruebaKey()
+    if(procede == 0):
+        messagebox.showinfo("Licencia", "Licencia no válida")
+
+
+#==========================================================================================================================
+#==========================================================================================================================
+#==========================================================================================================================
+
 # Interfaz gráfica
 
 protektor = tk.Tk()
 protektor.title("Protector")
 protektor.configure(bg="#002041")
 protektor.iconbitmap("iconos/logoPrt.ico")
+
+#login===============================================================================
+
+contenedorLog = tk.Frame(protektor, bg="#002041", relief="groove", bd=3)
+contenedorLog.grid(row=0, column=0, padx=3, pady=5)
+
+imagenParte = tk.Frame(contenedorLog, bg="#002041", relief="groove", bd=3)
+imagenParte.grid(row=0, column=0, padx=3, pady=5)
+
+# --- Imagen ---
+imagen = Image.open("iconos/logoPrt.jpg")   # tu imagen
+imagen = imagen.resize((350, 350), Image.Resampling.LANCZOS)
+img_tk = ImageTk.PhotoImage(imagen)
+
+label_img = tk.Label(imagenParte, image=img_tk, bg="#002041")
+label_img.grid(row=0, column=0, padx=3, pady=5)
+
+textoKey = tk.Frame(contenedorLog, bg="#002041", relief="groove", bd=3)
+textoKey.grid(row=1, column=0, padx=3, pady=5)
+textoKey.grid_remove()
+# --- Label ---
+label_texto = tk.Label(textoKey, text="Ingrese su dato:", fg="white", bg="#002041", font=("Arial", 12))
+label_texto.grid(row=0, column=0, padx=3, pady=5)
+
+# --- Entry ---
+entrada = tk.Entry(textoKey, width=30)
+entrada.grid(row=0, column=1, padx=3, pady=5)
+
+# --- Botón ---
+botoncito = tk.Frame(contenedorLog, bg="#002041", relief="groove", bd=3)
+botoncito.grid(row=2, column=0, padx=3, pady=5)
+botoncito.grid_remove()
+
+boton = tk.Button(botoncito, text="Aceptar", command=ValidaKey, bg="#004080", fg="white")
+boton.grid(row=0, column=0, padx=3, pady=5)
+
+protektor.after(0, CompruebaVersion)
+
+# fin Login ======================================================================
 
 # =========================
 # Estilos
@@ -500,10 +780,14 @@ btn_style = {
 label_style = {"bg": "#002041", "fg": "white", "font": ("Arial", 10)}
 entry_style = {"bg": "white", "fg": "black", "font": ("Arial", 10)}
 
+contnedorApp = tk.Frame(protektor, bg="#002041")
+contnedorApp.grid(row=0, padx=10, pady=10)
+contnedorApp.grid_remove()
+
 # =========================
 # Barra de opciones
 # =========================
-barraOpciones = tk.Frame(protektor, bg="#002041")
+barraOpciones = tk.Frame(contnedorApp, bg="#002041")
 barraOpciones.grid(row=0, padx=10, pady=10)
 
 vistaArchivos = tk.Button(barraOpciones, text="Cifrar Archivos", command=verArchivos, **btn_style)
@@ -521,7 +805,7 @@ tutoriales.grid(row=0, column=3, padx=5, pady=5)
 # =========================
 # Sección Archivos
 # =========================
-archivosCifrar = tk.Frame(protektor, bg="#002041", relief="groove", bd=3)
+archivosCifrar = tk.Frame(contnedorApp, bg="#002041", relief="groove", bd=3)
 archivosCifrar.grid(row=1, padx=10, pady=10, sticky="nsew")
 
 contenedor1 = tk.Frame(archivosCifrar, bg="#002041")
@@ -706,11 +990,11 @@ scrollbar.pack(side="right", fill="y")
 # =========================
 # Frames adicionales
 # =========================
-contrasenaGenerar = tk.Frame(protektor, bg="#002041", relief="groove", bd=3)
+contrasenaGenerar = tk.Frame(contnedorApp, bg="#002041", relief="groove", bd=3)
 contrasenaGenerar.grid(row=1, padx=10, pady=10)
 contrasenaGenerar.grid_remove()
 
-ajustes = tk.Frame(protektor, bg="#002041", relief="groove", bd=3)
+ajustes = tk.Frame(contnedorApp, bg="#002041", relief="groove", bd=3)
 ajustes.grid(row=1, padx=10, pady=10)
 ajustes.grid_remove()
 
@@ -803,7 +1087,7 @@ yt = tk.Button(ajustes, image=icono8, command=copiaryt, borderwidth=0, highlight
 yt.grid(row=1, column=3, padx=3, pady=5)
 
 
-redes = tk.Frame(protektor, bg="#002041", relief="groove", bd=3)
+redes = tk.Frame(contnedorApp, bg="#002041", relief="groove", bd=3)
 redes.grid(row=2, padx=10, pady=10)
 
 # =========================
