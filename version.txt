@@ -1,1 +1,1 @@
-1.0.0-https://github.com/rMELARIUSr/proteje/releases/download/Protektor/protektor-1.0.0.exe-cryptoGrafo1.0.0.exe
+1.0.0<https://github.com/rMELARIUSr/proteje/releases/download/Protektor/protektor-1.0.0.exe<cryptoGrafo1.0.0.exe
